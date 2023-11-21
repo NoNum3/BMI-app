@@ -1,9 +1,9 @@
 # text sizes
-FONT = "Helvetica 12"
+FONT = "Arial"
 MAIN_TEXT_SIZE = 150
 INPUT_FONT_SIZE = 26
 SWITCH_FONT_SIZE = 18
-
+BUTTON_CORNER_RADIUS = 100
 # colors
 GREEN = "#ABBF50"
 DARK_GREEN = "#3A8A7B"
