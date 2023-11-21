@@ -1,7 +1,7 @@
 # text sizes
 FONT = "Helvetica 12"
 MAIN_TEXT_SIZE = 150
-IMPUT_FONT_SIZE = 26
+INPUT_FONT_SIZE = 26
 SWITCH_FONT_SIZE = 18
 
 # colors
