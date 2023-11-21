@@ -27,15 +27,19 @@ class App(ctk.CTk):
         self.bmi_string = ctk.StringVar()
         self.update_bmi()
 
+        # tracing
+        self.height_int.trace("w", lambda *args: self.update_bmi())
+        self.weight_float.trace("w", lambda *args: self.update_bmi())
+
         # widgets
         ResultText(self, self.bmi_string)
-        WeightInput(self)
+        WeightInput(self, self.weight_float)
         HeightInput(self, self.height_int)
         UnitSwitcher(self)
 
         self.mainloop()
 
-    def update_bmi(self):
+    def update_bmi(self, *args):
         height_meter = self.height_int.get() / 100
         weight_kg = self.weight_float.get()
         bmi_result = weight_kg / (height_meter**2)
@@ -62,9 +66,13 @@ class ResultText(ctk.CTkLabel):
 
 
 class WeightInput(ctk.CTkFrame):
-    def __init__(self, parent):
+    def __init__(self, parent, weight_float):
         super().__init__(master=parent, fg_color=WHITE)
         self.grid(column=0, row=2, sticky="nsew", padx=10, pady=10)
+        self.weight_float = weight_float
+
+        self.output_string = ctk.StringVar()
+        self.update_weight()
 
         # layout
         self.rowconfigure(0, weight=1, uniform="b")
@@ -76,12 +84,15 @@ class WeightInput(ctk.CTkFrame):
 
         # widgets
         font = ctk.CTkFont(family=FONT, size=INPUT_FONT_SIZE)
-        label = ctk.CTkLabel(self, text="70kg", text_color=BLACK)
+        label = ctk.CTkLabel(
+            self, font=font, textvariable=self.output_string, text_color=BLACK
+        )
         label.grid(row=0, column=2)
 
         # buttons
         minus_button = ctk.CTkButton(
             self,
+            command=lambda: self.update_weight(("minus", "large")),
             text="-",
             font=font,
             text_color=BLACK,
@@ -98,6 +109,7 @@ class WeightInput(ctk.CTkFrame):
         )
         plus_button = ctk.CTkButton(
             self,
+            command=lambda: self.update_weight(("plus", "large")),
             text="+",
             font=font,
             text_color=BLACK,
@@ -115,6 +127,7 @@ class WeightInput(ctk.CTkFrame):
 
         small_minus_button = ctk.CTkButton(
             self,
+            command=lambda: self.update_weight(("minus", "small")),
             text="-",
             font=font,
             text_color=BLACK,
@@ -124,6 +137,7 @@ class WeightInput(ctk.CTkFrame):
         small_minus_button.grid(row=0, column=1, padx=4, pady=16, sticky="ns")
         small_plus_button = ctk.CTkButton(
             self,
+            command=lambda: self.update_weight(("plus", "small")),
             text="+",
             font=font,
             text_color=BLACK,
@@ -131,6 +145,16 @@ class WeightInput(ctk.CTkFrame):
             hover_color=GRAY,
         )
         small_plus_button.grid(row=0, column=3, padx=4, pady=16, sticky="ns")
+
+    def update_weight(self, info=None):
+        if info:
+            amount = 1 if info[1] == "large" else 0.1
+            if info[0] == "plus":
+                self.weight_float.set(self.weight_float.get() + amount)
+            elif info[0] == "minus":
+                self.weight_float.set(self.weight_float.get() - amount)
+
+        self.output_string.set(f"{self.weight_float.get():.1f}kg")  # update
 
 
 class HeightInput(ctk.CTkFrame):
@@ -141,24 +165,34 @@ class HeightInput(ctk.CTkFrame):
         # widgets
         slider = ctk.CTkSlider(
             master=self,
+            command=self.update_text,
             button_color=GREEN,
             button_hover_color=GRAY,
             progress_color=GREEN,
             fg_color=LIGHT_GRAY,
             corner_radius=BUTTON_CORNER_RADIUS,
-            variable= height_int,
-            from_= 100,
+            variable=height_int,
+            from_=100,
             to=220,
         )
-        slider.pack(side = 'left', fill="x", expand=True, padx=10, pady=10)
+        slider.pack(side="left", fill="x", expand=True, padx=10, pady=10)
+
+        self.output_string = ctk.StringVar()
+        self.update_text(height_int.get())
 
         output_text = ctk.CTkLabel(
             master=self,
-            text="1.70m",
+            textvariable=self.output_string,
             text_color=BLACK,
             font=ctk.CTkFont(family=FONT, size=INPUT_FONT_SIZE),
         )
-        output_text.pack(padx=10, pady=10)
+        output_text.pack(side="left", padx=20)
+
+    def update_text(self, amount):
+        text_string = str(int(amount))
+        meter = text_string[0]
+        cm = text_string[1:]
+        self.output_string.set(f"{meter}.{cm}m")
 
 
 class UnitSwitcher(ctk.CTkLabel):
