@@ -1,0 +1,16 @@
+# text sizes
+FONT = "Helvetica 12"
+MAIN_TEXT_SIZE = 150
+IMPUT_FONT_SIZE = 26
+SWITCH_FONT_SIZE = 18
+
+# colors
+GREEN = "#ABBF50"
+DARK_GREEN = "#3A8A7B"
+WHITE = "#F2F2F2"
+BLACK = "#1F1F1F"
+LIGHT_GRAY = "#E8E8E8"
+GRAY = "#C8D8D8"
+
+# title hex
+TITLE_HEX_COLOR = 0x50BFAB  # 0x00bbggrr
