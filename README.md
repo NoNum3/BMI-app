@@ -1,4 +1,5 @@
 # BMI Calculator App
+For more information visit https://github.com/NoNum3/BMI-app
 
 ## Description
 This BMI calculator app, built using Tkinter, helps users calculate their Body Mass Index (BMI) based on height and weight inputs. It provides a quick way to assess whether the user falls into the underweight, normal weight, overweight, or other BMI categories.
